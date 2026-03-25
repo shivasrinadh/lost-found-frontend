@@ -130,7 +130,7 @@ export default function ReportForm({ type }) {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(100px,1fr))', gap: 10 }}>
                   {CATEGORIES.map(c => (
                     <button key={c.value} onClick={() => set('category')(c.value)} style={{
-                      padding: '12px 8px', borderRadius: 'var(--r-md)', border: 'none', cursor: 'pointer',
+                      padding: '12px 8px', borderRadius: 'var(--r-md)', cursor: 'pointer',
                       background: form.category === c.value ? `${accentColor}18` : 'var(--bg-overlay)',
                       border: form.category === c.value ? `1px solid ${accentColor}60` : '1px solid var(--border-subtle)',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,

@@ -2,6 +2,11 @@ import axios from 'axios'
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '')
 
+const isAuthEndpoint = (url = '') => {
+  const normalized = String(url)
+  return normalized.includes('/auth/login') || normalized.includes('/auth/register')
+}
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
@@ -15,7 +20,17 @@ api.interceptors.request.use(config => {
   }
 
   const token = localStorage.getItem('findit_token')
-  if (token) config.headers.Authorization = `Bearer ${token}`
+  const hasUsableToken = !!token && token !== 'undefined' && token !== 'null'
+
+  // Do not send bearer token to login/register; stale tokens can trigger 403 on some backends.
+  if (hasUsableToken && !isAuthEndpoint(config.url)) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  if (isAuthEndpoint(config.url) && config.headers?.Authorization) {
+    delete config.headers.Authorization
+  }
+
   return config
 })
 
