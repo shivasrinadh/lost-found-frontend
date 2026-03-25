@@ -8,6 +8,8 @@ import { format } from 'date-fns'
 
 const CATEGORY_EMOJIS = { ELECTRONICS: '📱', CLOTHING: '👔', ACCESSORIES: '💍', BOOKS: '📚', KEYS: '🔑', WALLET: '👛', BAGS: '🎒', SPORTS: '⚽', DOCUMENTS: '📄', JEWELRY: '💎', OTHER: '📦' }
 
+const ASSET_BASE_URL = (import.meta.env.VITE_ASSET_BASE_URL || import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
+
 const toAssetUrl = (value) => {
   if (!value) return ''
 
@@ -19,8 +21,8 @@ const toAssetUrl = (value) => {
   if (/^https?:\/\//i.test(raw)) return raw
 
   const normalized = raw.replace(/\\/g, '/')
-  if (normalized.startsWith('/')) return normalized
-  return `/${normalized}`
+  if (normalized.startsWith('/')) return `${ASSET_BASE_URL}${normalized}`
+  return `${ASSET_BASE_URL}/${normalized}`
 }
 
 const resolveDocumentUrl = (claim) => toAssetUrl(
