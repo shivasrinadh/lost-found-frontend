@@ -128,15 +128,6 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Demo hint */}
-        <div style={{
-          marginTop:20, padding:'14px 20px',
-          background:'rgba(79,142,247,0.08)', border:'1px solid rgba(79,142,247,0.2)',
-          borderRadius:'var(--r-lg)', fontSize:13, color:'var(--text-secondary)',
-        }}>
-          <span style={{ color:'#7bb3ff', fontWeight:600 }}>💡 Demo accounts: </span>
-          alice / alice123 &nbsp;·&nbsp; admin / admin123
-        </div>
       </div>
     </div>
   )
