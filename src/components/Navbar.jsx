@@ -44,7 +44,7 @@ export default function Navbar() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 72 }}>
 
           {/* Logo */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <Link to="/" className="brand-link" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
             <motion.div
               whileHover={{ rotate: 180, scale: 1.1 }}
               transition={{ type: "spring", stiffness: 200, damping: 10 }}
@@ -56,7 +56,7 @@ export default function Navbar() {
                 fontFamily: 'var(--font-display)',
                 boxShadow: '0 4px 16px rgba(245,166,35,0.4)',
               }}>F</motion.div>
-            <span style={{
+            <span className="brand-wordmark" style={{
               fontFamily: 'var(--font-display)', fontWeight: 800,
               fontSize: 20, letterSpacing: '-0.03em',
               background: 'linear-gradient(135deg,#f0efe8,#9b9a94)',
@@ -73,80 +73,82 @@ export default function Navbar() {
           </div>
 
           {/* Right actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            {isAuth ? (
-              <>
-                {/* Report button */}
-                <div style={{ position: 'relative' }}>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="btn btn-primary btn-sm"
-                    onClick={() => setDropOpen(d => !d)}
-                    style={{ gap: 6 }}
-                  >
-                    <Plus size={15} strokeWidth={2.5} />
-                    Report
-                    <motion.div animate={{ rotate: dropOpen ? 180 : 0 }}>
-                      <ChevronDown size={13} />
-                    </motion.div>
-                  </motion.button>
-
-                  <AnimatePresence>
-                    {dropOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                        style={{
-                          position: 'absolute', top: 'calc(100% + 8px)', right: 0,
-                          background: 'var(--bg-elevated)', border: '1px solid var(--border-normal)',
-                          borderRadius: 'var(--r-lg)', padding: 8, minWidth: 180,
-                          boxShadow: 'var(--shadow-lg)', zIndex: 200,
-                          transformOrigin: 'top right'
-                        }}>
-                        <DropItem to="/report/lost" emoji="😢" label="Lost Item" sub="Can't find something?" />
-                        <DropItem to="/report/found" emoji="🎉" label="Found Item" sub="Found something?" />
+          <div className="nav-right" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div className="desktop-actions" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              {isAuth ? (
+                <>
+                  {/* Report button */}
+                  <div style={{ position: 'relative' }}>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="btn btn-primary btn-sm"
+                      onClick={() => setDropOpen(d => !d)}
+                      style={{ gap: 6 }}
+                    >
+                      <Plus size={15} strokeWidth={2.5} />
+                      Report
+                      <motion.div animate={{ rotate: dropOpen ? 180 : 0 }}>
+                        <ChevronDown size={13} />
                       </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                    </motion.button>
 
-                {/* User avatar */}
-                <div style={{ position: 'relative' }}>
+                    <AnimatePresence>
+                      {dropOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                          style={{
+                            position: 'absolute', top: 'calc(100% + 8px)', right: 0,
+                            background: 'var(--bg-elevated)', border: '1px solid var(--border-normal)',
+                            borderRadius: 'var(--r-lg)', padding: 8, minWidth: 180,
+                            boxShadow: 'var(--shadow-lg)', zIndex: 200,
+                            transformOrigin: 'top right'
+                          }}>
+                          <DropItem to="/report/lost" emoji="😢" label="Lost Item" sub="Can't find something?" />
+                          <DropItem to="/report/found" emoji="🎉" label="Found Item" sub="Found something?" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* User avatar */}
+                  <div style={{ position: 'relative' }}>
+                    <motion.button
+                      whileHover={{ scale: 1.1, boxShadow: '0 4px 20px rgba(245,166,35,0.5)' }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setDropOpen(d => !d)} /* Assuming dashboard drop opens contextually or later */
+                      style={{
+                        width: 40, height: 40, borderRadius: '50%',
+                        background: 'linear-gradient(135deg,#f5a623,#ff7b3a)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: '#0a0a0f', fontFamily: 'var(--font-display)',
+                        fontWeight: 700, fontSize: 15, border: 'none', cursor: 'pointer',
+                        boxShadow: '0 2px 12px rgba(245,166,35,0.35)',
+                      }}
+                    >
+                      {user?.username?.[0]?.toUpperCase()}
+                    </motion.button>
+                  </div>
+
                   <motion.button
-                    whileHover={{ scale: 1.1, boxShadow: '0 4px 20px rgba(245,166,35,0.5)' }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => setDropOpen(d => !d)} /* Assuming dashboard drop opens contextually or later */
-                    style={{
-                      width: 40, height: 40, borderRadius: '50%',
-                      background: 'linear-gradient(135deg,#f5a623,#ff7b3a)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: '#0a0a0f', fontFamily: 'var(--font-display)',
-                      fontWeight: 700, fontSize: 15, border: 'none', cursor: 'pointer',
-                      boxShadow: '0 2px 12px rgba(245,166,35,0.35)',
-                    }}
+                    whileHover={{ scale: 1.1, backgroundColor: 'var(--bg-hover)', color: 'var(--accent-danger)' }}
+                    onClick={handleLogout}
+                    className="btn btn-ghost btn-sm"
+                    style={{ padding: '8px 12px' }}
                   >
-                    {user?.username?.[0]?.toUpperCase()}
+                    <LogOut size={16} />
                   </motion.button>
-                </div>
-
-                <motion.button
-                  whileHover={{ scale: 1.1, backgroundColor: 'var(--bg-hover)', color: 'var(--accent-danger)' }}
-                  onClick={handleLogout}
-                  className="btn btn-ghost btn-sm"
-                  style={{ padding: '8px 12px' }}
-                >
-                  <LogOut size={16} />
-                </motion.button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="btn btn-ghost btn-sm">Sign in</Link>
-                <Link to="/register" className="btn btn-primary btn-sm">Get Started</Link>
-              </>
-            )}
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="btn btn-ghost btn-sm">Sign in</Link>
+                  <Link to="/register" className="btn btn-primary btn-sm">Get Started</Link>
+                </>
+              )}
+            </div>
 
             {/* Mobile menu toggle */}
             <button
@@ -200,9 +202,15 @@ export default function Navbar() {
       </AnimatePresence>
 
       <style>{`
-        @media(max-width:768px){
+        @media(max-width:900px){
           .desktop-nav{display:none!important}
+          .desktop-actions{display:none!important}
           .mobile-menu-btn{display:flex!important}
+        }
+
+        @media(max-width:480px){
+          .brand-wordmark{font-size:18px!important}
+          .brand-link{gap:8px!important}
         }
       `}</style>
     </motion.nav>

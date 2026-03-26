@@ -84,7 +84,7 @@ export default function Home() {
     >
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section style={{
+      <section className="home-hero" style={{
         minHeight: '100vh', display: 'flex', alignItems: 'center',
         position: 'relative', overflow: 'hidden',
         background: 'radial-gradient(ellipse 100% 70% at 50% -10%, rgba(245,166,35,0.08) 0%, transparent 60%)',
@@ -110,10 +110,10 @@ export default function Home() {
           backgroundSize: '60px 60px',
         }} />
 
-        <div className="container" style={{ position: 'relative', zIndex: 1, textAlign: 'center', paddingTop: 100 }}>
+        <div className="container home-hero-container" style={{ position: 'relative', zIndex: 1, textAlign: 'center', paddingTop: 100 }}>
           <motion.div variants={containerVariants} initial="hidden" animate="visible">
             {/* Pill badge */}
-            <motion.div variants={itemVariants} style={{
+            <motion.div className="home-kicker" variants={itemVariants} style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               background: 'rgba(245,166,35,0.1)', border: '1px solid rgba(245,166,35,0.25)',
               borderRadius: 'var(--r-full)', padding: '6px 16px',
@@ -128,7 +128,7 @@ export default function Home() {
             </motion.div>
 
             {/* Headline */}
-            <motion.h1 variants={itemVariants} style={{
+            <motion.h1 className="home-hero-title" variants={itemVariants} style={{
               fontSize: 'clamp(3rem,8vw,6rem)', fontWeight: 800, lineHeight: 1.05,
               letterSpacing: '-0.04em', marginBottom: 24,
             }}>
@@ -140,7 +140,7 @@ export default function Home() {
               }} className="text-gradient-animate">We'll find it.</span>
             </motion.h1>
 
-            <motion.p variants={itemVariants} style={{
+            <motion.p className="home-hero-subtitle" variants={itemVariants} style={{
               fontSize: 'clamp(1rem,2vw,1.2rem)', color: 'var(--text-secondary)',
               maxWidth: 520, margin: '0 auto 48px', lineHeight: 1.7,
             }}>
@@ -148,10 +148,10 @@ export default function Home() {
             </motion.p>
 
             {/* Hero search */}
-            <motion.form variants={itemVariants} onSubmit={handleSearch} style={{
+            <motion.form className="home-search-form" variants={itemVariants} onSubmit={handleSearch} style={{
               maxWidth: 580, margin: '0 auto 48px',
             }}>
-              <motion.div
+              <motion.div className="home-search-shell"
                 whileHover={{ y: -2, boxShadow: '0 25px 50px -12px rgba(245,166,35,0.25)' }}
                 whileTap={{ scale: 0.98 }}
                 style={{
@@ -165,7 +165,7 @@ export default function Home() {
                 onBlurCapture={e => { e.currentTarget.style.borderColor = 'var(--border-normal)'; }}
               >
                 <Search size={20} style={{ color: 'var(--text-muted)' }} />
-                <input
+                <input className="home-search-input"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search for lost items, locations…"
@@ -174,7 +174,7 @@ export default function Home() {
                     color: 'var(--text-primary)', fontSize: 16,
                   }}
                 />
-                <button type="submit" className="btn btn-primary" style={{ borderRadius: 28 }}>
+                <button type="submit" className="btn btn-primary home-search-button" style={{ borderRadius: 28 }}>
                   Find It
                   <ArrowRight size={16} />
                 </button>
@@ -182,7 +182,7 @@ export default function Home() {
             </motion.form>
 
             {/* CTA buttons */}
-            <motion.div variants={itemVariants} style={{
+            <motion.div className="home-hero-actions" variants={itemVariants} style={{
               display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap',
               marginBottom: 80,
             }}>
@@ -191,7 +191,7 @@ export default function Home() {
             </motion.div>
 
             {/* Stats row */}
-            <motion.div variants={containerVariants} style={{
+            <motion.div className="home-stats-grid" variants={containerVariants} style={{
               display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16,
               maxWidth: 800, margin: '0 auto',
             }}>
@@ -438,8 +438,28 @@ export default function Home() {
 
       <style>{`
         @media(max-width:768px){
+          .home-hero{min-height:calc(100dvh - 20px)!important}
+          .home-hero-container{padding-top:72px!important}
+          .home-kicker{font-size:11px!important;padding:5px 12px!important;margin-bottom:18px!important;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+          .home-hero-title{font-size:clamp(2rem,10vw,2.5rem)!important;line-height:1.08!important;word-break:break-word}
+          .home-hero-subtitle{font-size:15px!important;margin:0 auto 28px!important;max-width:92%!important}
+          .home-search-form{margin:0 auto 26px!important}
+          .home-search-shell{padding:8px 10px 8px 12px!important;gap:6px!important}
+          .home-search-input{font-size:15px!important;min-width:0!important}
+          .home-search-button{padding:10px 14px!important;font-size:13px!important}
+          .home-hero-actions{margin-bottom:40px!important}
+          .home-hero-actions .btn{width:100%;justify-content:center}
+          .home-stats-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}
           section > .container > div[style*="repeat(4,1fr)"] {grid-template-columns:repeat(2,1fr)!important}
           section > .container > div[style*="repeat(3,1fr)"] {grid-template-columns:1fr!important}
+        }
+
+        @media(max-width:420px){
+          .home-hero-container{padding-top:64px!important}
+          .home-hero-title{font-size:1.9rem!important}
+          .home-search-shell{flex-wrap:wrap!important}
+          .home-search-button{width:100%!important;justify-content:center!important}
+          .home-stats-grid{grid-template-columns:1fr!important}
         }
       `}</style>
     </motion.div>
