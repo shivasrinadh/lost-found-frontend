@@ -162,7 +162,7 @@ export default function ItemDetails() {
 
   return (
     <div className="page">
-      <div className="container" style={{ maxWidth: 880 }}>
+      <div className="container detail-wrap" style={{ maxWidth: 880 }}>
 
         {/* Back */}
         <button onClick={() => navigate(-1)} className="btn btn-ghost btn-sm" style={{ marginBottom: 24, gap: 6 }}>
@@ -182,11 +182,11 @@ export default function ItemDetails() {
               : 'linear-gradient(90deg,#22c55e,#4f8ef7)',
           }} />
 
-          <div style={{ padding: '36px 40px' }}>
-            <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
+          <div className="detail-mainpad" style={{ padding: '36px 40px' }}>
+            <div className="detail-headrow" style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
 
               {/* Emoji bubble */}
-              <div style={{
+              <div className="detail-emoji" style={{
                 width: 80, height: 80, borderRadius: 20, background: 'var(--bg-overlay)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 42, flexShrink: 0, border: '1px solid var(--border-subtle)',
@@ -214,7 +214,7 @@ export default function ItemDetails() {
 
               {/* Owner/Admin actions */}
               {(isOwner || isAdmin) && (
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div className="detail-owner-actions" style={{ display: 'flex', gap: 8 }}>
                   <button onClick={handleDelete} className="btn btn-danger btn-sm" title="Delete item">
                     <Trash2 size={15} />
                   </button>
@@ -297,7 +297,7 @@ export default function ItemDetails() {
         }}
           onClick={e => { if (e.target === e.currentTarget) closeClaimModal() }}
         >
-          <div style={{
+          <div className="detail-modal-card" style={{
             background: 'var(--bg-elevated)', border: '1px solid var(--border-normal)',
             borderRadius: 'var(--r-xl)', width: '100%', maxWidth: 500,
             boxShadow: 'var(--shadow-lg)', animation: 'scaleIn 0.2s var(--ease-spring)',
@@ -311,7 +311,7 @@ export default function ItemDetails() {
               </p>
             </div>
 
-            <div style={{ padding: '0 36px', overflow: 'auto', flex: 1 }}>
+            <div className="detail-modal-body" style={{ padding: '0 36px', overflow: 'auto', flex: 1 }}>
               <div className="input-group" style={{ marginBottom: 24 }}>
                 <label className="input-label">Proof of Ownership *</label>
                 <textarea
@@ -369,7 +369,7 @@ export default function ItemDetails() {
               </div>
             </div>
 
-            <div style={{ padding: '24px 36px 36px', borderTop: '1px solid var(--border-subtle)', display: 'flex', gap: 10 }}>
+            <div className="detail-modal-actions" style={{ padding: '24px 36px 36px', borderTop: '1px solid var(--border-subtle)', display: 'flex', gap: 10 }}>
               <button onClick={closeClaimModal} className="btn btn-outline btn-full">Cancel</button>
               <button onClick={handleClaim} className="btn btn-primary btn-full" disabled={submitting}>
                 {submitting ? <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> Submitting…</> : <><Send size={16} /> Submit Claim</>}
@@ -378,6 +378,20 @@ export default function ItemDetails() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .detail-mainpad { padding: 20px 16px !important; }
+          .detail-headrow { flex-direction: column !important; gap: 14px !important; }
+          .detail-emoji { width: 64px !important; height: 64px !important; font-size: 34px !important; border-radius: 16px !important; }
+          .detail-owner-actions { width: 100% !important; }
+          .detail-owner-actions button { width: 100% !important; justify-content: center !important; }
+          .detail-modal-card { max-height: 94vh !important; }
+          .detail-modal-card > div:first-child { padding: 20px 16px 12px !important; }
+          .detail-modal-body { padding: 0 16px !important; }
+          .detail-modal-actions { padding: 16px !important; flex-direction: column !important; }
+        }
+      `}</style>
     </div>
   )
 }
@@ -406,7 +420,7 @@ function ClaimCard({ claim, onResolve, isAdmin, delay }) {
   const imageUrl = resolveImageUrl(claim)
 
   return (
-    <div style={{
+    <div className="detail-claim-card" style={{
       background: 'var(--bg-elevated)', border: `1px solid var(--border-subtle)`,
       borderRadius: 'var(--r-lg)', padding: '20px 24px',
       animation: `fadeUp 0.4s ${delay}ms var(--ease-out) both`,
@@ -479,7 +493,7 @@ function ClaimCard({ claim, onResolve, isAdmin, delay }) {
       )}
 
       {isAdmin && claim.status === 'PENDING' && (
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="detail-claim-actions" style={{ display: 'flex', gap: 8 }}>
           <button onClick={() => onResolve(claim.id, 'APPROVED')} className="btn btn-sm" style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.25)' }}>
             <CheckCircle size={14} /> Approve
           </button>
@@ -488,6 +502,14 @@ function ClaimCard({ claim, onResolve, isAdmin, delay }) {
           </button>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .detail-claim-card { padding: 14px !important; }
+          .detail-claim-actions { flex-direction: column !important; }
+          .detail-claim-actions button { width: 100% !important; justify-content: center !important; }
+        }
+      `}</style>
     </div>
   )
 }

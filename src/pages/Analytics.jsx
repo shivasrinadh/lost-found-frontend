@@ -192,6 +192,13 @@ function Explain({ text }) {
     return <p className="analytics-explain">{text}</p>
 }
 
+function asList(response) {
+    if (Array.isArray(response)) return response
+    if (Array.isArray(response?.content)) return response.content
+    if (Array.isArray(response?.data)) return response.data
+    return []
+}
+
 export default function Analytics() {
     const [items, setItems] = useState([])
     const [claims, setClaims] = useState([])
@@ -204,18 +211,43 @@ export default function Analytics() {
         async function load() {
             setLoading(true)
             setError('')
+
+            let nextItems = []
+            let nextClaims = []
+
             try {
-                const [itemsRes, claimsRes] = await Promise.all([
-                    itemService.getAll({ page: 0, size: 500 }),
-                    itemService.getAllClaims({ page: 0, size: 500 }),
-                ])
+                try {
+                    const itemsRes = await itemService.getAll({ page: 0, size: 500 })
+                    nextItems = asList(itemsRes)
+                } catch {
+                    try {
+                        const mineRes = await itemService.getMine({ page: 0, size: 500 })
+                        nextItems = asList(mineRes)
+                    } catch {
+                        nextItems = []
+                    }
+                }
+
+                try {
+                    const claimsRes = await itemService.getAllClaims({ page: 0, size: 500 })
+                    nextClaims = asList(claimsRes)
+                } catch {
+                    try {
+                        const myClaimsRes = await itemService.getMyClaims({ page: 0, size: 500 })
+                        nextClaims = asList(myClaimsRes)
+                    } catch {
+                        nextClaims = []
+                    }
+                }
 
                 if (!mounted) return
-                setItems(itemsRes?.content || [])
-                setClaims(claimsRes?.content || [])
-            } catch (e) {
-                if (!mounted) return
-                setError('Unable to load analytics right now. Please refresh in a moment.')
+
+                setItems(nextItems)
+                setClaims(nextClaims)
+
+                if (nextItems.length === 0 && nextClaims.length === 0) {
+                    setError('Unable to load analytics right now. Please refresh in a moment.')
+                }
             } finally {
                 if (mounted) setLoading(false)
             }

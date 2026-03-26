@@ -78,8 +78,8 @@ export default function ItemList() {
       <div className="container">
 
         {/* Header */}
-        <div style={{ marginBottom: 40 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+        <div className="itemlist-header" style={{ marginBottom: 40 }}>
+          <div className="itemlist-header-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
             <div>
               <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', marginBottom: 6 }}>Browse Items</h1>
               <p style={{ color: 'var(--text-secondary)' }}>
@@ -87,7 +87,7 @@ export default function ItemList() {
               </p>
             </div>
             {isAuth && (
-              <div style={{ display: 'flex', gap: 10 }}>
+              <div className="itemlist-header-actions" style={{ display: 'flex', gap: 10 }}>
                 <Link to="/report/lost" className="btn btn-outline btn-sm">😢 Lost</Link>
                 <Link to="/report/found" className="btn btn-primary btn-sm"><Plus size={15} /> Found</Link>
               </div>
@@ -124,23 +124,24 @@ export default function ItemList() {
         />
 
         {/* Toolbar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <div className="itemlist-toolbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
           <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>
             {!loading && items.length > 0 && `Showing ${page * 12 + 1}–${Math.min((page + 1) * 12, total)} of ${total}`}
           </div>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <div className="itemlist-toolbar-actions" style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
             {/* Sort */}
-            <div style={{ position: 'relative' }}>
+            <div className="itemlist-sort-wrap" style={{ position: 'relative' }}>
               <select
                 value={sort} onChange={e => setSort(e.target.value)}
                 className="select-field"
+                aria-label="Sort items"
                 style={{ paddingRight: 32, fontSize: 13, padding: '8px 14px', minWidth: 160 }}
               >
                 {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
             </div>
             {/* View toggle */}
-            <div style={{ display: 'flex', gap: 4, background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--r-md)', padding: 4 }}>
+            <div className="itemlist-view-toggle" style={{ display: 'flex', gap: 4, background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--r-md)', padding: 4 }}>
               {[
                 { v: 'grid', Icon: Grid },
                 { v: 'list', Icon: ListIcon },
@@ -182,14 +183,14 @@ export default function ItemList() {
 
         {/* Pagination */}
         {pages > 1 && (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 48 }}>
+          <div className="itemlist-pagination" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 48 }}>
             <button
               onClick={() => goPage(page - 1)} disabled={page === 0}
               className="btn btn-outline btn-sm" style={{ gap: 4 }}
             >
               <ChevronLeft size={16} /> Prev
             </button>
-            <div style={{ display: 'flex', gap: 4 }}>
+            <div className="itemlist-pagination-pages" style={{ display: 'flex', gap: 4 }}>
               {Array.from({ length: Math.min(pages, 7) }, (_, i) => {
                 const pg = pages <= 7 ? i : (page < 4 ? i : page - 3 + i)
                 if (pg >= pages) return null
@@ -213,6 +214,20 @@ export default function ItemList() {
             </button>
           </div>
         )}
+
+        <style>{`
+          @media (max-width: 768px) {
+            .itemlist-header-top { flex-direction: column !important; gap: 12px !important; }
+            .itemlist-header-actions { width: 100% !important; }
+            .itemlist-header-actions a { flex: 1 !important; justify-content: center !important; }
+            .itemlist-toolbar { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
+            .itemlist-toolbar-actions { width: 100% !important; justify-content: space-between !important; }
+            .itemlist-sort-wrap { flex: 1 !important; }
+            .itemlist-sort-wrap .select-field { min-width: 0 !important; width: 100% !important; }
+            .itemlist-pagination { flex-wrap: wrap !important; gap: 10px !important; }
+            .itemlist-pagination-pages { order: 3 !important; width: 100% !important; justify-content: center !important; }
+          }
+        `}</style>
       </div>
     </div>
   )
@@ -221,7 +236,7 @@ export default function ItemList() {
 function ListRow({ item, delay }) {
   const EMOJIS = { ELECTRONICS: '📱', CLOTHING: '👔', ACCESSORIES: '💍', BOOKS: '📚', KEYS: '🔑', WALLET: '👛', BAGS: '🎒', SPORTS: '⚽', DOCUMENTS: '📄', JEWELRY: '💎', OTHER: '📦' }
   return (
-    <Link to={`/items/${item.id}`} style={{
+    <Link to={`/items/${item.id}`} className="list-row" style={{
       display: 'flex', alignItems: 'center', gap: 16,
       background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)',
       borderRadius: 'var(--r-lg)', padding: '16px 20px',
@@ -249,10 +264,17 @@ function ListRow({ item, delay }) {
         </div>
         <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title}</h3>
       </div>
-      <div style={{ color: 'var(--text-muted)', fontSize: 12, textAlign: 'right', flexShrink: 0 }}>
+      <div className="list-row-meta" style={{ color: 'var(--text-muted)', fontSize: 12, textAlign: 'right', flexShrink: 0 }}>
         <div>📍 {item.location}</div>
         <div style={{ marginTop: 2 }}>👤 {item.reportedByUsername}</div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .list-row { flex-wrap: wrap !important; gap: 10px !important; }
+          .list-row-meta { width: 100% !important; text-align: left !important; padding-left: 56px !important; }
+        }
+      `}</style>
     </Link>
   )
 }

@@ -1,0 +1,19 @@
+{
+    "name": "FindIt Campus Lost and Found",
+    "short_name": "FindIt",
+    "description": "Campus lost and found platform for reporting and recovering items.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#06060a",
+    "theme_color": "#06060a",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/logo.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
+    ]
+}

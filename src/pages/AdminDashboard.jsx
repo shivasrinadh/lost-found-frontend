@@ -118,7 +118,7 @@ export default function AdminDashboard() {
       <div className="container">
 
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 36 }}>
+        <div className="admin-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 36 }}>
           <div>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -143,7 +143,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Tabs */}
-        <div style={{
+        <div className="admin-tabs" style={{
           display: 'flex', gap: 4, marginBottom: 32,
           background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)',
           borderRadius: 'var(--r-lg)', padding: 4, width: 'fit-content',
@@ -180,7 +180,7 @@ export default function AdminDashboard() {
             {/* ── Overview ── */}
             {tab === 'overview' && (
               <div style={{ animation: 'fadeIn 0.3s' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 36 }}>
+                <div className="admin-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 36 }}>
                   {OVERVIEW_STATS.map((s, i) => (
                     <div key={i} style={{
                       background: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)',
@@ -212,7 +212,7 @@ export default function AdminDashboard() {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                       {pendingClaims.slice(0, 3).map(c => (
-                        <div key={c.id} style={{
+                        <div key={c.id} className="admin-quick-claim" style={{
                           display: 'flex', alignItems: 'center', gap: 12,
                           background: 'var(--bg-elevated)', borderRadius: 'var(--r-md)', padding: '12px 16px',
                         }}>
@@ -220,7 +220,7 @@ export default function AdminDashboard() {
                             {c.itemTitle}
                           </span>
                           <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>by {c.claimedByUsername}</span>
-                          <div style={{ display: 'flex', gap: 6 }}>
+                          <div className="admin-quick-actions" style={{ display: 'flex', gap: 6 }}>
                             <button onClick={() => handleResolve(c.id, 'APPROVED')} disabled={!!resolving} style={{
                               padding: '5px 10px', borderRadius: 'var(--r-sm)', border: '1px solid rgba(34,197,94,0.3)',
                               background: 'rgba(34,197,94,0.1)', color: '#4ade80', cursor: 'pointer', fontSize: 12, fontWeight: 600,
@@ -339,7 +339,7 @@ export default function AdminDashboard() {
                           borderRadius: 'var(--r-lg)', padding: '20px 24px',
                           animation: `fadeUp 0.3s ${i * 0.04}s var(--ease-out) both`,
                         }}>
-                          <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                          <div className="admin-claim-row" style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                             <div style={{ flex: 1 }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
                                 <span style={{
@@ -413,7 +413,7 @@ export default function AdminDashboard() {
                             </div>
 
                             {claim.status === 'PENDING' && (
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flexShrink: 0 }}>
+                              <div className="admin-claim-actions" style={{ display: 'flex', flexDirection: 'column', gap: 8, flexShrink: 0 }}>
                                 <button
                                   onClick={() => handleResolve(claim.id, 'APPROVED')}
                                   disabled={resolving === claim.id + 'APPROVED'}
@@ -449,7 +449,24 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      <style>{`@media(max-width:768px){ .admin-stats { grid-template-columns:repeat(2,1fr)!important } }`}</style>
+      <style>{`
+        @media (max-width: 1024px) {
+          .admin-stats { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+
+        @media (max-width: 768px) {
+          .admin-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+          .admin-tabs { width: 100% !important; overflow-x: auto !important; }
+          .admin-tabs button { white-space: nowrap !important; }
+          .admin-stats { grid-template-columns: 1fr !important; }
+          .admin-quick-claim { flex-direction: column !important; align-items: flex-start !important; }
+          .admin-quick-actions { width: 100% !important; }
+          .admin-quick-actions button { flex: 1 !important; }
+          .admin-claim-row { flex-direction: column !important; }
+          .admin-claim-actions { width: 100% !important; flex-direction: row !important; flex-wrap: wrap !important; }
+          .admin-claim-actions > * { flex: 1 1 140px !important; justify-content: center !important; }
+        }
+      `}</style>
     </div>
   )
 }
