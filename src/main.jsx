@@ -7,18 +7,41 @@ import App from './App'
 import './styles/main.css'
 
 // Ignore benign media play/pause race rejections that can be triggered by rapid route transitions.
+// These occur when Framer Motion or Route changes interrupt media playback promises.
 if (typeof window !== 'undefined') {
+  // Suppress unhandledrejection events
   window.addEventListener('unhandledrejection', (event) => {
     const reason = event?.reason
+
+    // Check for the specific AbortError from play() being interrupted
     const isPlayPauseAbort =
       reason?.name === 'AbortError' &&
       typeof reason?.message === 'string' &&
       reason.message.includes('play() request was interrupted by a call to pause()')
 
-    if (isPlayPauseAbort) {
-      event.preventDefault()
+    // Also catch generic AbortErrors that may be from the same source
+    const isGenericMediaAbort =
+      reason?.name === 'AbortError' &&
+      (reason?.message?.includes('abort') || reason?.message?.includes('media'))
+
+    if (isPlayPauseAbort || isGenericMediaAbort) {
+      event.preventDefault() // Suppress the error from appearing in console
     }
   })
+
+  // Also suppress console output for this error in development
+  if (import.meta.env.DEV) {
+    const originalError = console.error
+    console.error = function (...args) {
+      const errorStr = args?.[0]?.toString?.() || ''
+      const isMediaError = errorStr.includes('play() request was interrupted') ||
+        (args?.[0]?.name === 'AbortError' && errorStr.includes('abort'))
+
+      if (!isMediaError) {
+        originalError.apply(console, args)
+      }
+    }
+  }
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(

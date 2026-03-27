@@ -32,7 +32,7 @@ export default function ReportForm({ type }) {
   const [step, setStep] = useState(1)
   const [form, setForm] = useState({
     title: '', description: '', location: '', category: '',
-    type, dateOccurred: '',
+    type, dateOccurred: '', image: null,
   })
   const [loading, setLoading] = useState(false)
 
@@ -40,6 +40,11 @@ export default function ReportForm({ type }) {
 
   const canStep2 = form.title && form.category
   const canStep3 = form.location
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0] || null
+    setForm((f) => ({ ...f, image: file }))
+  }
 
   const handleSubmit = async () => {
     if (!form.title || !form.category || !form.location) {
@@ -167,6 +172,22 @@ export default function ReportForm({ type }) {
                 />
               </div>
 
+              <div className="input-group">
+                <label className="input-label">Item Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="input-field"
+                  style={{ padding: 12 }}
+                />
+                {form.image && (
+                  <div style={{ marginTop: 8, color: 'var(--text-secondary)', fontSize: 13 }}>
+                    Selected: {form.image.name}
+                  </div>
+                )}
+              </div>
+
               <button
                 className="btn btn-primary btn-full"
                 onClick={() => setStep(2)}
@@ -258,6 +279,7 @@ export default function ReportForm({ type }) {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
                   <ReviewChip emoji="📍" text={form.location} />
                   {form.dateOccurred && <ReviewChip emoji="📅" text={form.dateOccurred} />}
+                  {form.image && <ReviewChip emoji="🖼️" text={form.image.name} />}
                 </div>
               </div>
 

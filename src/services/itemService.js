@@ -4,7 +4,21 @@ export const itemService = {
   getAll: (params) => api.get('/items', { params }).then(r => r.data),
   getById: (id) => api.get(`/items/${id}`).then(r => r.data),
   getMine: (params) => api.get('/items/my', { params }).then(r => r.data),
-  create: (data) => api.post('/items', data).then(r => r.data),
+  create: (data) => {
+    if (!data?.image) return api.post('/items', data).then(r => r.data)
+
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === '') return
+      if (key === 'image') {
+        formData.append('image', value)
+        return
+      }
+      formData.append(key, value)
+    })
+
+    return api.post('/items', formData).then(r => r.data)
+  },
   update: (id, data) => api.put(`/items/${id}`, data).then(r => r.data),
   remove: (id) => api.delete(`/items/${id}`).then(r => r.data),
 
